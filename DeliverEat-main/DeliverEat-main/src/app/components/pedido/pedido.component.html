@@ -1,0 +1,372 @@
+<br>
+<!--Formulario de Pedido-->
+<form name="FormPedido" [formGroup]='FormPedido' class="bg-light">
+  <div *ngIf="AccionDatos == 'P'">
+    <fieldset>
+      <h3>Detalle de Pedido</h3>
+      	<!--texto: Revisar los datos ingresados...-->
+	    <div id="divMsjFormRegistro" *ngIf="submitted && FormPedido.invalid" class="form-group row alert alert-danger">
+		    <span class="fas fa-exclamation-sign"></span>Recuerde completar todos los campos.
+	    </div>
+      <br>
+      <!--campo calle-->
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2 col-sm-offset-2" for="Calle">Calle <span
+                      class="text-danger">*</span></label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" formControlName="Calle" [formControl]="Calle"
+          [ngClass]="{'is-invalid': (FormPedido.controls.Calle.touched)  
+              && FormPedido.controls.Calle.errors}" />
+
+          <span class="text-danger" *ngIf="(FormPedido.controls.Calle.touched) 
+                          && FormPedido.controls.Calle.errors?.required">
+                      Dato requerido.
+                  </span>
+                  <span class="text-danger" *ngIf="(FormPedido.controls.Calle.touched) 
+                        && (FormPedido.controls.Calle.errors?.minlength || FormPedido.controls.Calle.errors?.maxlength) ">
+                      Ingrese 4 a 55 caracteres.
+                  </span>           
+        </div>
+      </div>
+      <!--Numero-->
+      <div class="row form-group">
+        <label class="col-form-label col-sm-2 col-sm-offset-2" for="Numero">Número <span
+                      class="text-danger">*</span></label>
+        <div class="col-sm-6">
+          <input type="text" name="Numero" class="form-control" formControlName="Numero" [formControl]="Numero"
+              [ngClass]="{'is-invalid': (FormPedido.controls.Numero.touched)  
+              && FormPedido.controls.Numero.errors}" />
+          <span class="text-danger" *ngIf="(FormPedido.controls.Numero.touched) 
+                        && FormPedido.controls.Numero.errors?.required">
+                      Dato requerido.
+                  </span>
+          <span class="text-danger" *ngIf="(FormPedido.controls.Numero.touched) 
+                && FormPedido.controls.Numero.errors?.pattern">
+                      Dato numérico, 1 a 7 dígitos.
+                  </span>
+        </div>  
+      </div>
+
+      <!--Piso-->
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2 col-sm-offset-2" for="Piso">Piso </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" formControlName="Piso" [formControl]="Piso"/>    
+        </div>
+      </div>
+      
+      <!--Departamento-->
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2 col-sm-offset-2" for="Departamento">Departamento </label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" formControlName="Departamento" />    
+        </div>
+      </div>
+
+      <!--campo Referencia-->
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2 col-sm-offset-2" for="Referencia">Referencia </label>
+        <div class="col-sm-6">
+          <textarea class="form-control" formControlName="Referencia" [formControl]="Referencia" rows="3"> </textarea>    
+        </div>
+      </div>
+      
+      <!--campo ciudad-->
+      <div class="form-group row">
+        <label class="col-form-label col-sm-2 col-sm-offset-2" for="IdCiudad">
+                  Ciudad <span class="text-danger">*</span>
+              </label>
+        <div class="col-sm-6">
+          <select name="IdCiudad" class="form-control" formControlName="IdCiudad" (change)="ObtenerCiudad($event)"
+          [ngClass]="{'is-invalid': (FormPedido.controls.IdCiudad.touched)  
+              && FormPedido.controls.IdCiudad.errors}" >
+                      <option *ngFor="let opt of Ciudades" [ngValue]="opt.Nombre">
+                          ‌{{ opt.Nombre }}
+                      <option>
+                  </select>
+          <span class="text-danger" *ngIf="(FormPedido.controls.IdCiudad.touched) 
+                          && FormPedido.controls.IdCiudad.errors?.required">
+                      Dato requerido.
+                  </span>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <h3>Cuándo</h3>
+      <br>
+        <input type="radio" id="antes" name="entrega" value="antes" class="form-check-input ml-2" formControlName="Entrega" (change)="radioChangeHandler($event)" (click)="Ahora()" required [ngClass]="{'is-invalid': (FormPedido.controls.Entrega.touched)  
+              && FormPedido.controls.Entrega.errors}" />
+        <label for="antes" class="ml-4"> Lo antes posible</label><br>
+
+        <input type="radio" id="programar" name="entrega" value="programar" class="form-check-input ml-2" formControlName="Entrega" (change)="radioChangeHandler($event)" (click)="Programar()" required [ngClass]="{'is-invalid': (FormPedido.controls.Entrega.touched)  
+              && FormPedido.controls.Entrega.errors}" />
+        <label for="programar" class="ml-4"> Programar</label><br>
+        
+    </fieldset>
+  </div>
+  <!--Resumen de Pedido-->
+  <div *ngIf="AccionDatos == 'R'">   
+    <h3 class="text-center">Resumen de Pedido</h3>
+    <p class="text-center">De McDonalds <img src="https://i0.pngocean.com/files/676/74/342/fast-food-mcdonald-s-logo-golden-arches-restaurant-mcdonalds.jpg" class="rounded-circle" width="25" height="25" alt=""></p>
+    <br>
+    <table class="table table-striped col-s-3 col-m-2 mt-2">
+      <tr class="text-center">
+        <td>1</td>
+        <td>Papas Fritas<img src="https://d25dk4h1q4vl9b.cloudfront.net/media/images/menu-content/CO/papas-y-complementos/papas.png"  width="40"  height="25" alt=""></td>
+        <td>$170</td>
+      </tr>
+  </table><hr>
+    <p class="mt-1"> <b>Calle:</b> {{ Calle.value }} </p>
+    <p class="mt-1"> <b>Número:</b> {{ Numero.value }} </p>
+    <p class="mt-1"> <b>Ciudad:</b> {{ CiudadElegida }} </p>
+    <p class="mt-1"> <b>Método de Pago:</b> {{ MetodoPago }} </p>
+    <p class="mt-1"> <b>Entrega:</b> {{entrega=='ahora' ? 'Lo antes posible' : 'Programada'}} </p>
+    <p class="text-center"> <b> TOTAL de los productos    $170 </b></p>
+        	<!-- Botones Grabar, Cancelar/Volver' -->
+    <div class="row justify-content-center">
+      <button type="button"  class="btn btn-basic" (click)="ConfirmarPedido()">
+              <span class="fas fa-check"></span> Confirmar
+          </button>
+      &nbsp;
+      <button type="button" class="btn btn-basic" (click)="Volver()">
+              <span class="fas fa-undo"></span> Volver
+          </button>
+    </div>
+  </div>
+
+</form>
+
+<!--Formulario de Entrega-->
+<form name="FormEntrega" [formGroup]='FormEntrega' class="bg-light" *ngIf="AccionDatos == 'P'" >
+  <div *ngIf="entrega == 'programar'">
+  <!--Calendario-->
+  <div class="row form-group">
+			<label class="col-form-label col-sm-2 col-sm-offset-2" for="Calendario">Fecha<span
+                    class="text-danger">*</span></label>
+			<div class="col-sm-1">
+				<input type="Date" min="2020-09-08" name="Calendario" class="form-control" formControlName="Calendario" />
+				<span class="text-danger" *ngIf="(FormEntrega.controls.Calendario.touched) 
+                       && FormEntrega.controls.Calendario.errors?.required">
+                    Dato requerido.
+        </span>	  
+			</div>  
+	</div>
+  <br>
+    <!--Hora-->
+		<div class="row form-group">
+			<label class="col-form-label col-sm-2 col-sm-offset-2" for="Hora">Hora<span
+                    class="text-danger">*</span></label>
+			<div class="col-sm-2">
+				<input type="text" name="Hora" class="form-control" formControlName="Hora"
+            [ngClass]="{'is-invalid': (FormEntrega.controls.Hora.touched)  
+            && FormEntrega.controls.Hora.errors}" />
+				<span class="text-danger" *ngIf="(FormEntrega.controls.Hora.touched) 
+                       && FormEntrega.controls.Hora.errors?.required">
+                    Dato requerido.
+                </span>
+				<span class="text-danger" *ngIf="(FormEntrega.controls.Hora.touched) 
+                 && FormEntrega.controls.Hora.errors?.max">
+                    Ingrese rango de hora válido.
+                </span>
+        <span class="text-danger" *ngIf="(FormEntrega.controls.Hora.touched) 
+                 && FormEntrega.controls.Hora.errors?.pattern">
+                    Dato numérico.
+                </span>
+			</div>  
+		</div>
+
+    <!--Minutos-->
+		<div class="row form-group">
+			<label class="col-form-label col-sm-2 col-sm-offset-2" for="Minutos">Minutos<span
+                    class="text-danger">*</span></label>
+			<div class="col-sm-2">
+				<input type="text" name="Minutos" class="form-control" formControlName="Minutos"
+            [ngClass]="{'is-invalid': (FormEntrega.controls.Minutos.touched)  
+            && FormEntrega.controls.Minutos.errors}" />
+				<span class="text-danger" *ngIf="(FormEntrega.controls.Minutos.touched) 
+                       && FormEntrega.controls.Minutos.errors?.required">
+                    Dato requerido.
+                </span>
+				<span class="text-danger" *ngIf="(FormEntrega.controls.Minutos.touched) 
+               && FormEntrega.controls.Minutos.errors?.pattern">
+                    Dato numérico, ingrese rango de minutos válido.
+                </span>
+			</div>  
+		</div>
+</div>
+</form>
+
+<!--Formulario de Pago-->
+<form name="FormPago" [formGroup]='FormPago' class="bg-light" *ngIf="AccionDatos == 'P'" >
+    <fieldset>
+      <br>
+    <h3>Método Pago</h3>
+    <br>
+    <div>
+		<button type="button" class="btn btn-basic"(click)="Efectivo()" >
+            <span class="fas fa-money-bill"></span> Efectivo
+        </button>
+		&nbsp;
+		<button type="button" class="btn btn-basic" (click)="Tarjeta()" >
+            <span class="fas fa-credit-card"></span> Tarjeta de Crédito
+        </button>
+	  </div>
+  </fieldset>
+</form>
+
+<!--Formulario Tarjeta-->
+<form name="FormPagoTarjeta" [formGroup]='FormPagoTarjeta' class="bg-light" *ngIf="AccionDatos == 'T'">
+  <fieldset>
+    <h3>Pago Tarjeta Visa</h3>
+    <!--texto: Revisar los datos ingresados...-->
+	  <div id="divMsjFormRegistro" *ngIf="submittedTarjeta && FormPagoTarjeta.invalid" class="form-group row alert alert-danger">
+		    <span class="fas fa-exclamation-sign"></span>Recuerde completar todos los campos.
+	  </div>
+    <br>
+    <div class="col-sm-4 col-md-4 col-lg-4 text-center"> 
+    <img src="https://fotos.subefotos.com/2efe46da7fc0a500b459d1cf0df32ffao.jpg" width="220" height="140" alt="">
+    </div>
+    <!--Número-->
+    <br>
+    <div class="row form-group">
+      <label class="col-form-label col-sm-2 col-sm-offset-2" for="NroTarjeta">Número <span
+                    class="text-danger">*</span></label>
+      <div class="col-sm-6">
+        <input type="text" name="NroTarjeta" class="form-control" formControlName="NroTarjeta" [formControl]="NroTarjeta"
+            [ngClass]="{'is-invalid': (FormPagoTarjeta.controls.NroTarjeta.touched)  
+            && FormPagoTarjeta.controls.NroTarjeta.errors} "/>
+        <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.NroTarjeta.touched) 
+                      && FormPagoTarjeta.controls.NroTarjeta.errors?.required">
+                    Dato requerido.
+                </span>
+        <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.NroTarjeta.touched) 
+              && FormPagoTarjeta.controls.NroTarjeta.errors?.pattern">
+                    Dato numérico, 16 dígitos.
+                </span>
+         <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.NroTarjeta.touched) 
+                      && (FormPagoTarjeta.controls.NroTarjeta.errors?.min || FormPagoTarjeta.controls.NroTarjeta.errors?.max) ">
+                    Ingrese un número de tarjeta VISA.
+                </span>  
+      </div>  
+    </div>
+    <!--campo titular-->
+    <div class="form-group row">
+      <label class="col-form-label col-sm-2 col-sm-offset-2" for="Titular">Titular <span
+                    class="text-danger">*</span></label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" formControlName="Titular" 
+        [ngClass]="{'is-invalid': (FormPagoTarjeta.controls.Titular.touched)  
+            && FormPagoTarjeta.controls.Titular.errors}" />
+
+        <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.Titular.touched) 
+                        && FormPagoTarjeta.controls.Titular.errors?.required">
+                    Dato requerido.
+                </span>
+                <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.Titular.touched) 
+                      && (FormPagoTarjeta.controls.Titular.errors?.minlength || FormPagoTarjeta.controls.Titular.errors?.maxlength) ">
+                    Ingrese 4 a 55 caracteres.
+                </span>    
+                <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.Titular.touched) 
+              && FormPagoTarjeta.controls.Titular.errors?.pattern">
+                    Ingresar letras.
+                </span>       
+      </div>
+    </div>
+
+    <!--campo fechaVencimiento-->
+    <div class="row form-group">
+      <label class="col-form-label col-sm-2 col-sm-offset-2" for="Vencimiento">Vencimiento<span
+                    class="text-danger">*</span></label>
+      <div class="col-sm-4">
+        <input type="month" min="2020-10" name="Vencimiento" class="form-control" formControlName="Vencimiento" />
+        <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.Vencimiento.touched) 
+                      && FormPagoTarjeta.controls.Vencimiento.errors?.required">
+                    Dato requerido.
+                </span>			  
+      </div>  
+    </div>
+  
+  <!--CVC-->
+    <div class="row form-group">
+      <label class="col-form-label col-sm-2 col-sm-offset-2" for="CVC">CVC <span
+                    class="text-danger">*</span></label>
+      <div class="col-sm-6">
+        <input type="text" name="CVC" class="form-control" formControlName="CVC"
+            [ngClass]="{'is-invalid': (FormPagoTarjeta.controls.CVC.touched)  
+            && FormPagoTarjeta.controls.CVC.errors}" />
+        <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.CVC.touched) 
+                      && FormPagoTarjeta.controls.CVC.errors?.required">
+                    Dato requerido.
+                </span>
+        <span class="text-danger" *ngIf="(FormPagoTarjeta.controls.CVC.touched) 
+              && FormPagoTarjeta.controls.CVC.errors?.pattern">
+                    Dato numérico, 3 dígitos.
+                </span>
+      </div>  
+    </div>
+  <!-- Botones Grabar, Cancelar/Volver -->
+  <div class="row justify-content-center">
+    <button type="button"  class="btn btn-basic" (click)="ConfirmarTarjeta()">
+            <span class="fas fa-check"></span> Confirmar
+        </button>
+    &nbsp;
+    <button type="button" class="btn btn-basic" (click)="Volver()">
+            <span class="fas fa-undo"></span> Volver
+        </button>
+  </div>
+  </fieldset>
+</form>
+
+<!--Formulario Efectivo-->
+<form name="FormPagoEfectivo" [formGroup]='FormPagoEfectivo' class="bg-light">
+  <div *ngIf="AccionDatos == 'E'">
+  	<fieldset>
+    <h3>Pago Efectivo</h3>
+    <!--texto: Revisar los datos ingresados...-->
+	  <div id="divMsjFormRegistro" *ngIf="submittedEfectivo && FormPagoEfectivo.invalid" class="form-group row alert alert-danger">
+		    <span class="fas fa-exclamation-sign"></span>Recuerde completar todos los campos.
+	  </div>
+    <!--Monto-->
+		<div class="row form-group">
+			<label class="col-form-label col-sm-2 col-sm-offset-2" for="Monto">Monto <span
+                    class="text-danger">*</span></label>      
+			<div class="col-sm-6">
+        <label>Recuerde que el valor del pedido es de $170</label>
+				<input type="text" name="Monto" class="form-control" formControlName="Monto" [formControl]="Monto"
+            [ngClass]="{'is-invalid': (FormPagoEfectivo.controls.Monto.touched)  
+            && FormPagoEfectivo.controls.Monto.errors}" />
+				<span class="text-danger" *ngIf="(FormPagoEfectivo.controls.Monto.touched) 
+                       && FormPagoEfectivo.controls.Monto.errors?.required">
+                    Dato requerido.
+                </span>
+				<span class="text-danger" *ngIf="(FormPagoEfectivo.controls.Monto.touched) 
+               && FormPagoEfectivo.controls.Monto.errors?.pattern">
+                    Dato numérico, 1 a 7 dígitos.
+                </span>          
+          <span class="text-danger" *ngIf="(FormPagoEfectivo.controls.Monto.touched) 
+                       && FormPagoEfectivo.controls.Monto.value < 170">
+                    Ingrese un monto válido.
+        </span>
+			</div>
+		</div>
+    	<!-- Botones Grabar, Cancelar/Volver' -->
+    <div class="row justify-content-center">
+      <button type="button"  class="btn btn-basic" (click)="ConfirmarEfectivo()">
+              <span class="fas fa-check"></span> Confirmar
+          </button>
+      &nbsp;
+      <button type="button" class="btn btn-basic" (click)="Volver()">
+              <span class="fas fa-undo"></span> Volver
+          </button>
+    </div>
+</fieldset>
+</div>
+
+</form>
+
+<div class="row justify-content-center centro"  *ngIf="AccionDatos == 'L'">
+  <h1 class="text-center">Tu pedido ya está en camino!</h1>
+  <a class="btn btn-basic align-center"  routerLink="/carrito" title="Carrito"><span class="fas fa-shopping-cart"></span> Volver</a>
+</div>
+
+
